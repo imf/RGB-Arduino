@@ -17,4 +17,14 @@ class RGB {
 		int _blue;
 };
 
+class RGBLED {
+	public:
+		RGBLED(int redPin, int greenPin, int bluePin);
+		void begin();
+	private:
+		int _redPin;
+		int _greenPin;
+		int _bluePin;
+};
+
 #endif
