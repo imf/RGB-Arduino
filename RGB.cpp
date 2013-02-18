@@ -1,6 +1,8 @@
 #include "Arduino.h"
 #include "RGB.h"
 
+#define DEBUG
+
 RGB::RGB(unsigned long rgbValue) {
 	this->_red = (rgbValue & 0xFF0000L) >> 16;
 	this->_green = (rgbValue & 0x00FF00L) >> 8;
@@ -25,6 +27,16 @@ int RGB::getBlue() {
 	return this->_blue;
 }
 
+/*
+std::string RGB::str() {
+	std::stringstream ss << "RGB(" << _red << "," << _green << "," << _blue << ")";
+	return ss.str();
+}
+*/
+char* RGB::toString() {
+	return "RGB()";
+}
+
 RGBLED::RGBLED(int redPin, int greenPin, int bluePin) {
 	_redPin = redPin;
 	_greenPin = greenPin;
@@ -45,3 +57,43 @@ void RGBLED::setColor(RGB rgb) {
 	analogWrite(_greenPin, rgb.getGreen());
 	analogWrite(_bluePin,  rgb.getBlue());
 }
+
+void RGBLED::gradient(unsigned long startColor, unsigned long endColor) {
+	this->gradient(RGB(startColor), RGB(endColor));
+}
+
+void RGBLED::gradient(RGB startColor, RGB endColor) {
+	this->gradient(startColor, endColor, 1000, 16);
+}
+
+void RGBLED::gradient(RGB startColor, RGB endColor, int durationInMS, int steps) {
+#ifdef DEBUG
+  Serial.print("In RGBLED::gradient(");
+  Serial.print(startColor.toString());
+  Serial.print(", ");
+  Serial.print(endColor.toString());
+  Serial.println(")");
+#endif  
+  float stepRed = (endColor.getRed() - startColor.getRed()) / steps; // It's ok if these are negative, because they will still get 'added' to the start color.
+  float stepGreen = (endColor.getGreen() - startColor.getGreen()) / steps;
+  float stepBlue = (endColor.getBlue() - startColor.getBlue()) / steps;
+  
+  Serial.print("stepRed = ");
+  Serial.println(stepRed);
+  
+  int red = startColor.getRed();
+  int green = startColor.getGreen();
+  int blue = startColor.getBlue();
+  
+  for (int i = 0; i <= steps; i++) {
+    this->setColor(RGB(red,green,blue));
+    red += stepRed;
+    green += stepGreen;
+    blue += stepBlue;
+    delay(durationInMS / steps);
+  }
+#ifdef DEBUG
+//  assertEqual(endRed, startRed, stepRed);
+#endif
+}
+

@@ -1,4 +1,5 @@
 #include "Arduino.h"
+//#include "stdio.h"
 
 #ifndef RGB_h
 #define RGB_h
@@ -11,6 +12,8 @@ class RGB {
 		int getGreen();
 		int getBlue();
 		unsigned long getRGB();
+		char* toString();
+//		std::string str();
 	private:
 		int _red;
 		int _green;
@@ -22,6 +25,10 @@ class RGBLED {
 		RGBLED(int redPin, int greenPin, int bluePin);
 		void begin();
 		void setColor(RGB rgb);
+		void off();
+		void gradient(RGB startColor, RGB endColor, int durationInMS, int steps);
+		void gradient(RGB startColor, RGB endColor);
+		void gradient(unsigned long startColor, unsigned long endColor);
 	private:
 		int _redPin;
 		int _greenPin;
