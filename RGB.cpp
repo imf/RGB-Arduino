@@ -39,3 +39,9 @@ void RGBLED::begin() {
 	digitalWrite(_greenPin, HIGH);
 	digitalWrite(_bluePin,  HIGH);
 }
+
+void RGBLED::setColor(RGB rgb) {
+	analogWrite(_redPin,   rgb.getRed());
+	analogWrite(_greenPin, rgb.getGreen());
+	analogWrite(_bluePin,  rgb.getBlue());
+}

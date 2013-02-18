@@ -21,6 +21,7 @@ class RGBLED {
 	public:
 		RGBLED(int redPin, int greenPin, int bluePin);
 		void begin();
+		void setColor(RGB rgb);
 	private:
 		int _redPin;
 		int _greenPin;
